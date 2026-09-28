@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh-CN"><head>
+<!doctype html>
+<html lang="zh-CN">
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
@@ -23,7 +24,7 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; letter-spacing: 0; }
-    button, input, select { font: inherit; letter-spacing: 0; }
+    button, input, select, textarea { font: inherit; letter-spacing: 0; }
     button, a, select { cursor: pointer; }
     .shell { min-height: 100vh; }
     .topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
@@ -60,15 +61,44 @@
     .tag { display: inline-flex; align-items: center; min-height: 24px; border-radius: 5px; padding: 2px 7px; background: var(--surface-2); color: var(--muted); font-size: 12px; }
     .tag.group { background: var(--blue-soft); color: var(--blue); }
     .dimensions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-self: center; }
-    .dimension { min-height: 58px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--text); padding: 8px 9px; text-align: left; overflow: hidden; }
-    .dimension:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
-    .dimension:disabled { cursor: default; color: #a0aaa4; background: var(--surface-2); }
-    .platform { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; text-transform: uppercase; }
-    .size { display: block; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .dimension { min-height: 118px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--text); padding: 8px 9px; overflow: hidden; }
+    .dimension:hover:not(.is-disabled) { border-color: color-mix(in srgb, var(--accent) 52%, var(--line)); }
+    .dimension.is-disabled { color: #a0aaa4; background: var(--surface-2); }
+    .dimension-head, .media-row, .detail-head, .edit-actions { display: flex; align-items: center; gap: 6px; }
+    .dimension-head { justify-content: space-between; min-height: 24px; }
+    .platform { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .size-copy { display: block; width: 100%; margin: 2px 0 0; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; }
+    .size { display: block; min-height: 21px; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .size-copy:not(:disabled):hover .size { color: var(--accent); }
+    .icon-btn { width: 28px; height: 28px; flex: 0 0 28px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); padding: 0; line-height: 1; }
+    .icon-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .icon-btn:disabled { cursor: default; opacity: .42; }
+    .media-row { margin-top: 7px; min-height: 28px; display: grid; grid-template-columns: repeat(3, 28px); align-items: center; }
+    .media-info { min-width: 0; grid-column: 1 / -1; color: var(--muted); font-size: 11px; line-height: 1.25; }
+    .media-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .media-status { display: block; margin-top: 2px; white-space: nowrap; }
+    .media-status.match { color: var(--accent); }
+    .media-status.mismatch { color: #bd3a32; }
     details { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 9px; }
     summary { color: var(--muted); font-size: 12px; width: fit-content; }
-    .details-grid { margin-top: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; color: var(--muted); font-size: 12px; line-height: 1.55; }
-    .details-grid b { color: var(--text); font-weight: 600; }
+    .detail-head { justify-content: space-between; margin-top: 10px; }
+    .details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .details-grid b, .edit-field label { color: var(--text); font-weight: 600; }
+    .detail-value:empty::after { content: "未填写"; color: var(--muted); opacity: .72; }
+    .details-editor { display: grid; gap: 10px; }
+    .edit-field { display: grid; gap: 5px; }
+    .edit-field textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--line); border-radius: 6px; padding: 8px 9px; background: var(--surface); color: var(--text); outline: none; }
+    .edit-field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .edit-actions { justify-content: flex-end; }
+    .text-btn { min-height: 32px; border: 1px solid var(--line); border-radius: 6px; padding: 0 10px; background: var(--surface); color: var(--text); }
+    .text-btn.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .storage-note { margin: 14px 0 0; color: var(--muted); font-size: 12px; text-align: right; }
+    dialog { width: min(920px, calc(100% - 28px)); max-height: calc(100vh - 40px); border: 1px solid var(--line); border-radius: 8px; padding: 0; background: var(--surface); color: var(--text); box-shadow: 0 24px 80px rgba(0,0,0,.28); }
+    dialog::backdrop { background: rgba(7, 12, 9, .72); }
+    .preview-head { min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px 10px 16px; border-bottom: 1px solid var(--line); }
+    .preview-title { min-width: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .preview-body { display: grid; place-items: center; min-height: 220px; padding: 16px; background: var(--surface-2); }
+    .preview-body img, .preview-body video { display: block; max-width: 100%; max-height: calc(100vh - 130px); object-fit: contain; }
     mark { background: #ffe66b; color: inherit; border-radius: 2px; padding: 0 1px; }
     .empty { display: none; padding: 64px 12px; text-align: center; color: var(--muted); }
     .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 14px); opacity: 0; pointer-events: none; background: var(--text); color: var(--surface); border-radius: 6px; padding: 9px 13px; font-size: 13px; transition: .18s ease; z-index: 20; }
@@ -86,13 +116,15 @@
       .source-link { margin-top: 7px; }
       .scope-row { align-items: flex-start; flex-direction: column; }
       .dimensions { grid-template-columns: 1fr; }
-      .dimension { min-height: 50px; display: grid; grid-template-columns: 60px 1fr; align-items: center; }
-      .platform { margin: 0; }
+      .dimension { min-height: 118px; }
       .details-grid { grid-template-columns: 1fr; }
+      .icon-btn { width: 34px; height: 34px; flex-basis: 34px; }
+      .media-row { grid-template-columns: repeat(3, 34px); align-items: end; }
     }
     @media (prefers-color-scheme: dark) {
       :root { color-scheme: dark; --bg:#121714; --surface:#1b221e; --surface-2:#252e28; --text:#f0f5f2; --muted:#a8b3ac; --line:#344038; --accent:#62d49a; --accent-soft:#183a29; --blue-soft:#1b3048; --blue:#87bfff; --amber-soft:#3a2c11; --amber:#ffd37a; --shadow:0 12px 32px rgba(0,0,0,.24); }
       mark { background:#6f5d00; }
+      .media-status.mismatch { color:#ff8c83; }
     }
   </style>
 </head>
@@ -104,7 +136,7 @@
           <div class="brand-mark">LB</div>
           <div><h1>素材尺寸速查</h1><div class="subtitle">站内运营位设计规范 · 2026-09-28 同步</div></div>
         </div>
-        <a class="source-link" href="https://up3mczep5h.sg.larksuite.com/wiki/KfutwguutiDpbyk3yd5llVnBgEg?sheet=pkTK4W&amp;table=tblyhKknLmwsOidq&amp;view=vew1oai4Re" target="_blank" rel="noreferrer">查看源表 ↗</a>
+        <a class="source-link" href="https://up3mczep5h.sg.larksuite.com/wiki/KfutwguutiDpbyk3yd5llVnBgEg?sheet=pkTK4W&table=tblyhKknLmwsOidq&view=vew1oai4Re" target="_blank" rel="noreferrer">查看源表 ↗</a>
       </div>
     </header>
     <main>
@@ -124,57 +156,267 @@
           <button class="scope" data-scope="入口规范" aria-pressed="false">入口规范</button>
           <button class="scope" data-scope="活动主视觉" aria-pressed="false">活动主视觉</button>
         </div>
-        <div class="result-count" id="count" aria-live="polite">96 / 96 条</div>
+        <div class="result-count" id="count" aria-live="polite"></div>
       </div>
-      <div class="notice" id="notice" style="display: block;">源表部分记录的尺寸列与补充说明不一致；本页优先展示平台尺寸列，并保留原说明供核对。</div>
+      <div class="notice" id="notice">源表部分记录的尺寸列与补充说明不一致；本页优先展示平台尺寸列，并保留原说明供核对。</div>
       <section id="list" class="list" aria-label="素材尺寸列表"></section>
-      <div id="empty" class="empty" style="display: none;">没有匹配的素材尺寸</div>
+      <div id="empty" class="empty">没有匹配的素材尺寸</div>
+      <p class="storage-note">编辑文字与上传素材仅保存在当前浏览器</p>
     </main>
+    <input id="mediaInput" type="file" accept="image/*,video/*" hidden>
+    <dialog id="previewDialog" aria-labelledby="previewTitle">
+      <div class="preview-head"><div id="previewTitle" class="preview-title"></div><button id="previewClose" class="icon-btn" type="button" title="关闭预览" aria-label="关闭预览">×</button></div>
+      <div id="previewBody" class="preview-body"></div>
+    </dialog>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const data = JSON.parse(document.getElementById('data').textContent);
-    const state = { q: '', platform: 'all', scope: 'all', category: 'all' };
-    const els = { search: document.getElementById('search'), category: document.getElementById('category'), list: document.getElementById('list'), count: document.getElementById('count'), empty: document.getElementById('empty'), notice: document.getElementById('notice'), toast: document.getElementById('toast') };
-    const unavailable = v => !v || /^(无|--|—)$/.test(v.trim());
-    const searchable = item => Object.values(item).join(' ').toLowerCase();
-    const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    function highlight(text, q) { const safe = esc(text); if (!q) return safe; const needle = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); return safe.replace(new RegExp(`(${needle})`, 'ig'), '<mark>$1</mark>'); }
-    function render() {
-      const q = state.q.trim().toLowerCase();
-      const rows = data.filter(item => {
-        if (state.scope !== 'all' && item.g !== state.scope) return false;
-        if (state.category !== 'all' && item.c !== state.category) return false;
-        if (state.platform !== 'all' && unavailable(item[state.platform])) return false;
-        return !q || searchable(item).includes(q);
-      });
-      els.count.textContent = `${rows.length} / ${data.length} 条`;
-      els.empty.style.display = rows.length ? 'none' : 'block';
-      els.notice.style.display = rows.some(r => r.x && /尺寸/.test(r.x) && /\d/.test(r.x)) ? 'block' : 'none';
-      els.list.innerHTML = rows.map((item, index) => {
-        const dims = [['w','Web'],['h','H5'],['a','App']].map(([key,label]) => {
-          const disabled = unavailable(item[key]);
-          return `<button class="dimension" data-copy="${esc(item[key])}" ${disabled ? 'disabled' : ''} aria-label="复制 ${label} 尺寸 ${esc(item[key] || '无')}"><span class="platform">${label}</span><span class="size">${esc(disabled ? '—' : item[key])}</span></button>`;
+      const data = JSON.parse(document.getElementById('data').textContent).map((item, index) => ({ ...item, _index: index }));
+      const STORAGE_KEY = 'material-size-guide-text-v1';
+      const DB_NAME = 'material-size-guide-media';
+      const STORE_NAME = 'assets';
+      const state = { q: '', platform: 'all', scope: 'all', category: 'all', editing: null, uploadTarget: null };
+      const mediaCache = new Map();
+      let previewUrl = '';
+      let dbPromise;
+      let textOverrides = {};
+      try { textOverrides = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { textOverrides = {}; }
+
+      const els = {
+        search: document.getElementById('search'), category: document.getElementById('category'),
+        list: document.getElementById('list'), count: document.getElementById('count'),
+        empty: document.getElementById('empty'), notice: document.getElementById('notice'),
+        toast: document.getElementById('toast'), mediaInput: document.getElementById('mediaInput'),
+        previewDialog: document.getElementById('previewDialog'), previewTitle: document.getElementById('previewTitle'),
+        previewBody: document.getElementById('previewBody'), previewClose: document.getElementById('previewClose')
+      };
+      const unavailable = value => !value || /^(无|--|—)$/.test(value.trim());
+      const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+      const merged = item => ({ ...item, ...(textOverrides[item._index] || {}) });
+      const searchable = item => Object.entries(merged(item)).filter(([key]) => key !== '_index').map(([, value]) => value).join(' ').toLowerCase();
+      const mediaKey = (index, platform) => `${index}:${platform}`;
+
+      function highlight(text, query) {
+        const safe = esc(text);
+        if (!query) return safe;
+        const needle = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return safe.replace(new RegExp(`(${needle})`, 'ig'), '<mark>$1</mark>');
+      }
+
+      function showToast(message) {
+        els.toast.textContent = message;
+        els.toast.classList.add('show');
+        clearTimeout(window.__toast);
+        window.__toast = setTimeout(() => els.toast.classList.remove('show'), 1800);
+      }
+
+      function openDb() {
+        if (!('indexedDB' in window)) return Promise.reject(new Error('浏览器不支持本地素材存储'));
+        if (!dbPromise) {
+          dbPromise = new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, 1);
+            request.onupgradeneeded = () => request.result.createObjectStore(STORE_NAME, { keyPath: 'key' });
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+          });
+        }
+        return dbPromise;
+      }
+
+      async function dbAction(mode, value) {
+        const db = await openDb();
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(STORE_NAME, mode === 'getAll' ? 'readonly' : 'readwrite');
+          const store = transaction.objectStore(STORE_NAME);
+          const request = mode === 'put' ? store.put(value) : mode === 'delete' ? store.delete(value) : store.getAll();
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      function expectedSizes(spec, type) {
+        const normalized = String(spec || '').replace(/[xX*]/g, '×');
+        const label = type.startsWith('video/') ? '视频' : '静态';
+        const specific = normalized.match(new RegExp(`${label}\\s*(\\d+)\\s*×\\s*(\\d+)`, 'i'));
+        if (specific) return [[Number(specific[1]), Number(specific[2])]];
+        return [...normalized.matchAll(/(\d+)\s*×\s*(\d+)/g)].map(match => [Number(match[1]), Number(match[2])]);
+      }
+
+      function validationFor(record, spec) {
+        if (!record || !record.width || !record.height) return { className: '', text: '已上传' };
+        const expected = expectedSizes(spec, record.type);
+        const actual = `${record.width}×${record.height}`;
+        if (!expected.length) return { className: '', text: actual };
+        const matched = expected.some(([width, height]) => width === record.width && height === record.height);
+        return { className: matched ? 'match' : 'mismatch', text: `${actual} · ${matched ? '尺寸匹配' : '尺寸不符'}` };
+      }
+
+      function dimensionMarkup(item, platform, label) {
+        const disabled = unavailable(item[platform]);
+        const record = mediaCache.get(mediaKey(item._index, platform));
+        const status = validationFor(record, item[platform]);
+        return `<div class="dimension${disabled ? ' is-disabled' : ''}">
+          <div class="dimension-head"><span class="platform">${label}</span><button class="icon-btn" type="button" data-action="upload" data-index="${item._index}" data-platform="${platform}" title="${record ? '替换素材' : '上传素材'}" aria-label="${record ? '替换' : '上传'} ${label} 素材" ${disabled ? 'disabled' : ''}>＋</button></div>
+          <button class="size-copy" type="button" data-copy="${esc(item[platform])}" title="复制尺寸" aria-label="复制 ${label} 尺寸 ${esc(item[platform] || '无')}" ${disabled ? 'disabled' : ''}><span class="size">${esc(disabled ? '—' : item[platform])}</span></button>
+          ${disabled ? '' : `<div class="media-row"><div class="media-info">${record ? `<span class="media-name" title="${esc(record.name)}">${esc(record.name)}</span><span class="media-status ${status.className}">${status.text}</span>` : '<span class="media-name">未上传</span>'}</div>${record ? `<button class="icon-btn" type="button" data-action="preview" data-key="${record.key}" title="预览素材" aria-label="预览素材">↗</button><button class="icon-btn" type="button" data-action="download" data-key="${record.key}" title="下载素材" aria-label="下载素材">↓</button><button class="icon-btn" type="button" data-action="remove" data-key="${record.key}" title="移除素材" aria-label="移除素材">×</button>` : ''}</div>`}
+        </div>`;
+      }
+
+      function detailMarkup(item, query) {
+        if (state.editing === item._index) {
+          return `<div class="detail-head"><div></div><div class="edit-actions"><button class="text-btn" type="button" data-action="cancel-edit">× 取消</button><button class="text-btn primary" type="button" data-action="save-edit">✓ 保存</button></div></div><div class="details-editor">
+            <div class="edit-field"><label for="edit-d-${item._index}">说明</label><textarea id="edit-d-${item._index}" data-field="d">${esc(item.d)}</textarea></div>
+            <div class="edit-field"><label for="edit-m-${item._index}">制作要求</label><textarea id="edit-m-${item._index}" data-field="m">${esc(item.m)}</textarea></div>
+            <div class="edit-field"><label for="edit-x-${item._index}">源表补充</label><textarea id="edit-x-${item._index}" data-field="x">${esc(item.x)}</textarea></div>
+          </div>`;
+        }
+        return `<div class="detail-head"><div class="details-grid"><div><b>说明：</b><span class="detail-value">${highlight(item.d, query)}</span></div><div><b>制作要求：</b><span class="detail-value">${highlight(item.m, query)}</span></div><div><b>源表补充：</b><span class="detail-value">${highlight(item.x, query)}</span></div></div><button class="icon-btn" type="button" data-action="edit" title="编辑制作说明" aria-label="编辑制作说明">✎</button></div>`;
+      }
+
+      function render() {
+        const query = state.q.trim().toLowerCase();
+        const rows = data.filter(source => {
+          const item = merged(source);
+          if (state.scope !== 'all' && item.g !== state.scope) return false;
+          if (state.category !== 'all' && item.c !== state.category) return false;
+          if (state.platform !== 'all' && unavailable(item[state.platform])) return false;
+          return !query || searchable(source).includes(query);
+        });
+        els.count.textContent = `${rows.length} / ${data.length} 条`;
+        els.empty.style.display = rows.length ? 'none' : 'block';
+        els.notice.style.display = rows.some(source => { const item = merged(source); return item.x && /尺寸/.test(item.x) && /\d/.test(item.x); }) ? 'block' : 'none';
+        els.list.innerHTML = rows.map(source => {
+          const item = merged(source);
+          const dimensions = [['w','Web'], ['h','H5'], ['a','App']].map(([platform, label]) => dimensionMarkup(item, platform, label)).join('');
+          return `<article class="item" data-index="${item._index}"><div><div class="item-head"><div><h2 class="item-title">${highlight(item.n, query)}</h2>${item.id ? `<div class="id">${highlight(item.id, query)}</div>` : ''}</div></div><div class="meta"><span class="tag group">${esc(item.g)}</span>${item.c ? `<span class="tag">${esc(item.c)}</span>` : ''}${item.s ? `<span class="tag">${highlight(item.s, query)}</span>` : ''}</div></div><div class="dimensions">${dimensions}</div><details ${state.editing === item._index ? 'open' : ''}><summary>查看制作说明</summary>${detailMarkup(item, query)}</details></article>`;
         }).join('');
-        const details = [item.d && `<div><b>说明：</b>${highlight(item.d, q)}</div>`, item.m && `<div><b>制作要求：</b>${highlight(item.m, q)}</div>`, item.x && `<div><b>源表补充：</b>${highlight(item.x, q)}</div>`].filter(Boolean).join('');
-        return `<article class="item" data-index="${index}"><div><div class="item-head"><div><h2 class="item-title">${highlight(item.n, q)}</h2>${item.id ? `<div class="id">${highlight(item.id, q)}</div>` : ''}</div></div><div class="meta"><span class="tag group">${esc(item.g)}</span>${item.c ? `<span class="tag">${esc(item.c)}</span>` : ''}${item.s ? `<span class="tag">${highlight(item.s, q)}</span>` : ''}</div></div><div class="dimensions">${dims}</div>${details ? `<details><summary>查看制作说明</summary><div class="details-grid">${details}</div></details>` : ''}</article>`;
-      }).join('');
-    }
-    const categories = [...new Set(data.map(d => d.c).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-CN'));
-    els.category.insertAdjacentHTML('beforeend', categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join(''));
-    els.search.addEventListener('input', e => { state.q = e.target.value; render(); });
-    els.category.addEventListener('change', e => { state.category = e.target.value; render(); });
-    document.getElementById('platforms').addEventListener('click', e => { const b=e.target.closest('button'); if(!b)return; state.platform=b.dataset.platform; e.currentTarget.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b)); render(); });
-    document.getElementById('scopes').addEventListener('click', e => { const b=e.target.closest('button'); if(!b)return; state.scope=b.dataset.scope; e.currentTarget.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b)); render(); });
-    els.list.addEventListener('click', async e => { const b=e.target.closest('[data-copy]'); if(!b || b.disabled)return; try { await navigator.clipboard.writeText(b.dataset.copy); els.toast.textContent=`已复制 ${b.dataset.copy}`; els.toast.classList.add('show'); clearTimeout(window.__toast); window.__toast=setTimeout(()=>els.toast.classList.remove('show'),1400); } catch { els.toast.textContent='复制失败，请手动选择'; els.toast.classList.add('show'); } });
-    document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==='k') { e.preventDefault(); els.search.focus(); } if (e.key==='Escape' && document.activeElement===els.search) { els.search.value=''; state.q=''; render(); } });
-    render();
+      }
+
+      function readMediaDimensions(file) {
+        return new Promise((resolve, reject) => {
+          const url = URL.createObjectURL(file);
+          const cleanup = () => URL.revokeObjectURL(url);
+          if (file.type.startsWith('image/')) {
+            const image = new Image();
+            image.onload = () => { const result = { width: image.naturalWidth, height: image.naturalHeight }; cleanup(); resolve(result); };
+            image.onerror = () => { cleanup(); reject(new Error('无法读取图片')); };
+            image.src = url;
+          } else {
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.onloadedmetadata = () => { const result = { width: video.videoWidth, height: video.videoHeight }; cleanup(); resolve(result); };
+            video.onerror = () => { cleanup(); reject(new Error('无法读取视频')); };
+            video.src = url;
+          }
+        });
+      }
+
+      function closePreview() {
+        if (els.previewDialog.open) els.previewDialog.close();
+        els.previewBody.replaceChildren();
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        previewUrl = '';
+      }
+
+      const categories = [...new Set(data.map(item => item.c).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'zh-CN'));
+      els.category.insertAdjacentHTML('beforeend', categories.map(category => `<option value="${esc(category)}">${esc(category)}</option>`).join(''));
+      els.search.addEventListener('input', event => { state.q = event.target.value; render(); });
+      els.category.addEventListener('change', event => { state.category = event.target.value; render(); });
+      document.getElementById('platforms').addEventListener('click', event => { const button = event.target.closest('button'); if (!button) return; state.platform = button.dataset.platform; event.currentTarget.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', item === button)); render(); });
+      document.getElementById('scopes').addEventListener('click', event => { const button = event.target.closest('button'); if (!button) return; state.scope = button.dataset.scope; event.currentTarget.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', item === button)); render(); });
+
+      els.list.addEventListener('click', async event => {
+        const article = event.target.closest('.item');
+        const button = event.target.closest('button');
+        if (!button || !article || button.disabled) return;
+        const index = Number(article.dataset.index);
+        const action = button.dataset.action;
+        if (button.dataset.copy) {
+          try { await navigator.clipboard.writeText(button.dataset.copy); showToast(`已复制 ${button.dataset.copy}`); }
+          catch { showToast('复制失败，请手动选择'); }
+          return;
+        }
+        if (action === 'edit') {
+          state.editing = index;
+          render();
+          document.getElementById(`edit-d-${index}`)?.focus();
+        } else if (action === 'cancel-edit') {
+          state.editing = null;
+          render();
+        } else if (action === 'save-edit') {
+          const values = {};
+          article.querySelectorAll('[data-field]').forEach(field => { values[field.dataset.field] = field.value.trim(); });
+          textOverrides[index] = values;
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(textOverrides)); }
+          catch { showToast('浏览器无法保存编辑内容'); return; }
+          state.editing = null;
+          render();
+          showToast('制作说明已保存');
+        } else if (action === 'upload') {
+          state.uploadTarget = { index, platform: button.dataset.platform };
+          els.mediaInput.value = '';
+          els.mediaInput.click();
+        } else if (action === 'preview') {
+          const record = mediaCache.get(button.dataset.key);
+          if (!record) return;
+          closePreview();
+          previewUrl = URL.createObjectURL(record.blob);
+          const media = document.createElement(record.type.startsWith('video/') ? 'video' : 'img');
+          media.src = previewUrl;
+          media.alt = record.type.startsWith('video/') ? '' : record.name;
+          if (media.tagName === 'VIDEO') media.controls = true;
+          els.previewTitle.textContent = `${record.name} · ${record.width || '?'}×${record.height || '?'}`;
+          els.previewBody.append(media);
+          els.previewDialog.showModal();
+        } else if (action === 'download') {
+          const record = mediaCache.get(button.dataset.key);
+          if (!record) return;
+          const url = URL.createObjectURL(record.blob);
+          const link = document.createElement('a');
+          link.href = url; link.download = record.name; link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } else if (action === 'remove') {
+          const record = mediaCache.get(button.dataset.key);
+          if (!record || !confirm(`移除本地素材“${record.name}”？`)) return;
+          try { await dbAction('delete', record.key); mediaCache.delete(record.key); render(); showToast('本地素材已移除'); }
+          catch { showToast('移除失败，请重试'); }
+        }
+      });
+
+      els.mediaInput.addEventListener('change', async () => {
+        const file = els.mediaInput.files?.[0];
+        const target = state.uploadTarget;
+        if (!file || !target) return;
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) { showToast('请选择图片或视频文件'); return; }
+        try {
+          const dimensions = await readMediaDimensions(file);
+          const key = mediaKey(target.index, target.platform);
+          const record = { key, name: file.name, type: file.type, size: file.size, width: dimensions.width, height: dimensions.height, blob: file, updatedAt: Date.now() };
+          await dbAction('put', record);
+          mediaCache.set(key, record);
+          render();
+          const source = data[target.index];
+          const status = validationFor(record, source[target.platform]);
+          showToast(status.className === 'mismatch' ? `已上传，${status.text}` : '素材已上传并保存');
+        } catch (error) { showToast(error.message || '素材上传失败'); }
+        finally { state.uploadTarget = null; els.mediaInput.value = ''; }
+      });
+
+      els.previewClose.addEventListener('click', closePreview);
+      els.previewDialog.addEventListener('cancel', event => { event.preventDefault(); closePreview(); });
+      els.previewDialog.addEventListener('click', event => { if (event.target === els.previewDialog) closePreview(); });
+      document.addEventListener('keydown', event => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); els.search.focus(); }
+        if (event.key === 'Escape' && document.activeElement === els.search) { els.search.value = ''; state.q = ''; render(); }
+      });
+
+      render();
+      dbAction('getAll').then(records => { records.forEach(record => mediaCache.set(record.key, record)); render(); }).catch(() => showToast('本地素材存储不可用'));
     });
   </script>
   <script type="application/json" id="data">
 [{"g":"入口规范","id":"ADS000001","n":"首页大轮播图","d":"此广告位将会用户app首页轮播图和pc首页轮播图","s":"交易前-首页-web-大轮播广告位","w":"496×352","h":"无","a":"510×420","c":"首页","m":"图片为透明底，png格式","x":"老首页2.0 WEB大轮播图 496×352 1X 老首页2.0 APP大轮播图 510×420 1X"},{"g":"入口规范","id":"ADS000003","n":"首页小轮播图","d":"首页买币入口边小轮播","s":"交易前-首页-web-小轮播广告位","w":"496×352","h":"无","a":"246×204","c":"首页","m":"图片为透明底，png格式","x":"老首页2.0 APP大轮播图 510×420 1X 老首页2.0 APP小轮播图 246×204 1X"},{"g":"入口规范","id":"ADS000054","n":"app-首页5.0轮播-左一","d":"常规广告位","s":"交易前-首页-APP-左一广告位","w":"无","h":"无","a":"510×420","c":"首页","m":"图片为透明底，png格式","x":"老首页2.0 APP大轮播图 510×420 1X"},{"g":"入口规范","id":"ADS000055","n":"app、web-首页5.0轮播-右一","d":"限制图片为246px×204px，仅限app端使用。","s":"交易前-首页-APP-右一广告位","w":"无","h":"无","a":"246×204","c":"首页","m":"图片为透明底，png格式","x":"老首页2.0 APP小轮播图 246×204 1X"},{"g":"入口规范","id":"ADS000056","n":"app、web-首页5.0轮播-右二","d":"限制图片为246px×204px，仅限app端使用。","s":"交易前-首页-APP-右二广告位","w":"无","h":"无","a":"246×204","c":"首页","m":"图片为透明底，png格式","x":"老首页2.0 APP小轮播图 246×204 1X"},{"g":"入口规范","id":"","n":"APP首页 金刚位","d":"新金刚区132×132 老金刚区144×144","s":"交易前-首页-APP-金刚区","w":"无","h":"无","a":"132×132","c":"首页","m":"图片为透明底，png格式","x":"3.0 APP 新首页金刚位图标 尺寸： 132×132 黑/白 1X"},{"g":"入口规范","id":"ADS000011","n":"老APP弹窗广告","d":"老版本app弹窗兼容(560×785)","s":"交易前-首页-APP-弹窗广告","w":"无","h":"无","a":"560×785","c":"首页","m":"多语言文字需切在图片里","x":"老APP弹窗广告2.0 560×785 1X"},{"g":"入口规范","id":"ADS000016","n":"合约活动广告位","d":"合约活动广告位","s":"交易前-合约详情页","w":"2637×189","h":"无","a":"1125×144","c":"交易","m":"图片背景色#000000，开发自动裁切","x":"合约活动广告位 WEB 2637×189 1X 合约活动广告位 App 1125×144 1X"},{"g":"入口规范","id":"ADS000042","n":"跟单首页轮播广告位（新）","d":"配图轮播广告位，最多配置6个广告","s":"交易前-跟单首页","w":"290×290","h":"无","a":"290×290","c":"金融","m":"每3秒自动轮播；支持翻页器与左右切换","x":"跟单首页轮播广告位 WEB / APP 290×290 1X"},{"g":"入口规范","id":"ADS000074","n":"AFA-资产划转","d":"AFA活动运营位","s":"交易中-划转弹窗","w":"840×1092","h":"1041×585","a":"1041×585","c":"用户资产","m":"背景色：#000000，png格式","x":"源表补充中 H5 标注为 840×1092，请上线前核对"},{"g":"入口规范","id":"ADS000075","n":"行情页广告位","d":"AFA活动运营位，行情页","s":"交易前-行情页","w":"3600×324","h":"2196×324","a":"1041×201","c":"现货","m":"780以下背景图两侧向中间裁剪；标题最多2行","x":"源表补充中 App 标注为 1125×144，请上线前核对"},{"g":"入口规范","id":"ADS000077","n":"一级导航icon","d":"只配置icon，文案由研发写","s":"交易前-一级导航栏","w":"78×78","h":"78×78","a":"108×108","c":"公共","m":"","x":"一级导航icon广告"},{"g":"入口规范","id":"ADS000078","n":"搜索菜单","d":"只配置背景图，文案研发写","s":"交易前-一级导航栏-搜索下拉","w":"1056×201","h":"2196×201","a":"1041×201","c":"公共","m":"Web/H5由前端拼接，App走素材管理","x":""},{"g":"入口规范","id":"ADS000079","n":"福利中心菜单","d":"只配置背景图，文案研发写","s":"交易前-一级导航栏-热门活动下拉","w":"732×732","h":"无","a":"无","c":"公共","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS0000106","n":"合约菜单","d":"只配置背景图，文案研发写","s":"交易前-一级导航栏-合约下拉","w":"755×755","h":"无","a":"无","c":"公共","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS0000006、ADS0000007","n":"搜索推荐-币币 / 合约","d":"UI提供切图","s":"交易前-一级导航栏-搜索推荐下拉","w":"20×20","h":"无","a":"无","c":"公共","m":"","x":"导航栏 20×20 1X"},{"g":"入口规范","id":"ADS000080","n":"登录","d":"Web显示主标题+副标题，App/H5显示主标题","s":"交易前-登录页","w":"1440×1440","h":"1440×222","a":"1038×222","c":"用户资产","m":"排序值大的优先，无轮播，需配置兜底","x":""},{"g":"入口规范","id":"ADS000081","n":"注册","d":"广告位配置：显示标题（主标题）","s":"交易前-注册页","w":"1440×1440","h":"1440×222","a":"1038×222","c":"用户资产","m":"排序值大的优先，无轮播，需配置兜底","x":""},{"g":"入口规范","id":"","n":"【affiliate渠道】注册页","d":"注册页图片","s":"交易前-注册页【affiliate渠道】","w":"700×700","h":"222×222","a":"222×222","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"ADS000082","n":"福利中心头图","d":"福利中心头图","s":"交易前-WEB-福利中心页","w":"3840×800","h":"750×360","a":"无","c":"增长","m":"","x":""},{"g":"入口规范","id":"ADS000089","n":"开屏广告","d":"开屏广告位","s":"交易前-APP-开屏广告","w":"无","h":"无","a":"1125×2436","c":"公共","m":"","x":""},{"g":"入口规范","id":"ADS000091","n":"底部注册引导","d":"Web&H5首页底部注册引导","s":"交易前-WEB-首页","w":"1125×192","h":"1125×192","a":"无","c":"首页","m":"APP无，PC是前端拼接","x":"源表补充误写为 1125×2436，请上线前核对"},{"g":"入口规范","id":"ADS000093","n":"右上角头像浮层广告位","d":"个人中心下拉广告","s":"交易前-导航栏-个人中心下拉","w":"768×192","h":"无","a":"无","c":"用户资产","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000098","n":"十周年 - 合约交易页广告位","d":"合约交易页广告位","s":"交易前-合约交易页","w":"2637×189","h":"无","a":"1125×144","c":"交易","m":"前端拼接","x":""},{"g":"入口规范","id":"ADS000099","n":"AFA增强 - 合约交易页广告位","d":"合约交易页广告位","s":"交易前-合约交易页","w":"729×264","h":"无","a":"1125×144","c":"交易","m":"前端拼接","x":"H5同十周年合约交易页广告位"},{"g":"入口规范","id":"ADS000111","n":"App跟单吸底浮条","d":"App跟单吸底浮条","s":"交易前-APP-跟单页","w":"无","h":"无","a":"1125×234","c":"金融","m":"PC无，APP是前端拼接","x":""},{"g":"入口规范","id":"ADS000112","n":"App挖矿吸底浮条","d":"App挖矿吸底浮条","s":"交易前-APP-挖矿","w":"无","h":"无","a":"1125×234","c":"金融","m":"PC无，APP是前端拼接","x":""},{"g":"入口规范","id":"ADS000113","n":"App空投吸底浮条","d":"App空投吸底浮条","s":"交易前-APP-AirDrop","w":"无","h":"无","a":"1125×234","c":"金融","m":"PC无，APP是前端拼接","x":""},{"g":"入口规范","id":"ADS000107","n":"热门活动吸底浮条","d":"热门活动吸底浮条","s":"交易前-WEB-活动中心","w":"1125×192","h":"1125×234","a":"无","c":"增长","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000108","n":"行情页吸底浮条","d":"行情页吸底浮条","s":"交易前-WEB-行情页","w":"1125×192","h":"1125×234","a":"无","c":"现货","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000109","n":"问答页吸底浮条","d":"问答页吸底浮条","s":"交易前-WEB-加密货币问答","w":"1125×192","h":"1125×234","a":"无","c":"增长","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000110","n":"福利中心吸底浮条","d":"福利中心吸底浮条","s":"交易前-WEB-福利中心","w":"1125×192","h":"1125×234","a":"无","c":"增长","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000111","n":"跟单吸底浮条","d":"跟单吸底浮条","s":"交易前-WEB-跟单","w":"1125×192","h":"1125×234","a":"无","c":"交易","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000112","n":"挖矿吸底浮条","d":"挖矿吸底浮条","s":"交易前-WEB-现货赚币","w":"1125×192","h":"1125×234","a":"无","c":"增长","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000113","n":"Airdrop+吸底浮条","d":"Airdrop+吸底浮条","s":"交易前-WEB-Airdrop+","w":"1125×192","h":"1125×234","a":"无","c":"增长","m":"APP无，PC是前端拼接","x":""},{"g":"入口规范","id":"ADS000130","n":"个人中心轮播广告位","d":"个人中心轮播广告位","s":"WEB-个人中心","w":"300×300","h":"无","a":"无","c":"用户资产","m":"图片为透明底，png格式","x":""},{"g":"入口规范","id":"ADS000144","n":"邀请返佣广告位","d":"邀请返佣广告位","s":"WEB-邀请返佣","w":"354×354","h":"354×354","a":"354×354","c":"增长","m":"图片为透明底，png格式","x":""},{"g":"入口规范","id":"","n":"合约-网格广告位","d":"合约-网格广告位","s":"合约-网格","w":"224×224","h":"224×224","a":"192×192","c":"交易","m":"图片为透明底，png格式","x":"源表补充尺寸与平台尺寸列不一致，请核对"},{"g":"入口规范","id":"ADS000159","n":"新首页活动banner","d":"新首页活动banner","s":"APP-新首页活动banner","w":"无","h":"无","a":"228×228","c":"首页","m":"图片为透明底，png格式","x":"源表补充尺寸不一致，请核对"},{"g":"入口规范","id":"ADS000160","n":"新首页品宣banner","d":"新首页品宣banner","s":"新版App首页","w":"无","h":"无","a":"933×540","c":"首页","m":"图片带背景","x":""},{"g":"入口规范","id":"ADS000161","n":"新首页注册引导组件","d":"新首页注册引导组件","s":"新版App首页","w":"无","h":"无","a":"90×90","c":"首页","m":"图片为透明底，png格式","x":""},{"g":"入口规范","id":"ADS000163","n":"新首页首屏已登录提示广告","d":"新首页首屏已登录提示广告","s":"新版App首页","w":"无","h":"无","a":"120×120","c":"首页","m":"图片为透明底，png格式","x":"源表补充标注为 228×228，请上线前核对"},{"g":"入口规范","id":"","n":"新首页活动Tab配图","d":"新首页活动Tab配图","s":"新版App首页","w":"无","h":"无","a":"192×192","c":"首页","m":"图片为透明底，png格式","x":""},{"g":"入口规范","id":"ADS000242","n":"资产页-总资产模块-右下角图片","d":"总资产模块装饰图","s":"资产页","w":"746×172","h":"750×172","a":"无","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"活动中心图片","d":"活动中心列表图","s":"热门活动-活动中心","w":"420×420","h":"420×420","a":"无","c":"增长","m":"图片为透明底，png格式","x":""},{"g":"入口规范","id":"ADS000165","n":"SEO侧边栏广告样式（短）","d":"SEO侧边栏广告","s":"购买/出售、价格、价格预测","w":"1152×480","h":"1041×432","a":"无","c":"增长","m":"","x":""},{"g":"入口规范","id":"ADS000166","n":"SEO顶部下挂广告位（长）","d":"SEO顶部广告","s":"数字货币计算器；帮助中心","w":"3600×270","h":"1041×270","a":"无","c":"增长","m":"","x":"源表补充 Web 标注为 3800×270，请上线前核对"},{"g":"入口规范","id":"不确定","n":"SEO-加密货币研究平台文章封面图","d":"不确定是否支持后台可配置","s":"footer-加密货币研究平台","w":"486×340","h":"486×340","a":"","c":"","m":"","x":""},{"g":"入口规范","id":"ADS000022","n":"新币预告页","d":"新币预告图","s":"交易-新币详情","w":"156×156","h":"156×156","a":"156×156","c":"交易","m":"","x":""},{"g":"入口规范","id":"不确定","n":"学院首页banner","d":"学院首页banner","s":"footer-学院百科","w":"480×258","h":"480×258","a":"无","c":"增长","m":"","x":""},{"g":"入口规范","id":"ADS000035","n":"学院详情页文章配图","d":"文章详情头图","s":"footer-学院百科-文章详情","w":"1504×752","h":"1504×752","a":"无","c":"增长","m":"","x":"源表补充标注为 1504×516，请上线前核对"},{"g":"入口规范","id":"ADS000039","n":"个人中心用户头像","d":"用户头像","s":"个人中心详情页","w":"172×172","h":"无","a":"172×172","c":"公共","m":"","x":""},{"g":"入口规范","id":"ADS000092","n":"KYC成功页广告位","d":"KYC成功页广告位","s":"KYC","w":"80×80","h":"60×60","a":"60×60","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"ADS000101","n":"双币投资广告位","d":"插图 532×299；banner 532×224","s":"双币投资","w":"532×299","h":"","a":"","c":"金融","m":"","x":""},{"g":"入口规范","id":"ADS000102","n":"公告文章详情页广告位-注册引导","d":"文章详情注册引导","s":"交易前-一级导航-公告中心-文章详情","w":"282×216","h":"347×102","a":"无","c":"增长","m":"","x":""},{"g":"入口规范","id":"ADS000104","n":"公告列表广告位-注册引导","d":"公告列表注册引导","s":"交易前-一级导航-公告中心","w":"508×102","h":"347×102","a":"","c":"增长","m":"","x":""},{"g":"入口规范","id":"ADS000116","n":"交易成功弹窗广告位","d":"交易成功弹窗","s":"交易-弹窗","w":"360×360","h":"360×360","a":"360×360","c":"交易","m":"","x":""},{"g":"入口规范","id":"ADS000121、ADS000122、ADS000123","n":"交易新手引导指南","d":"现货、合约、现货杠杆、杠杆代币","s":"交易-教学中心-帮助","w":"128×72","h":"128×72","a":"128×72","c":"交易","m":"","x":"源表说明中另有 360×204，请核对用途"},{"g":"入口规范","id":"ADS000124、ADS000125","n":"KYC身份认证广告位","d":"KYC身份认证广告位","s":"KYC","w":"80×80","h":"60×60","a":"40×40","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"ADS000135","n":"合约赚币广告位","d":"插图尺寸 520×384","s":"金融-合约赚币","w":"197×41 / 520×384","h":"","a":"","c":"金融","m":"","x":""},{"g":"入口规范","id":"ADS000140","n":"资产充值引导","d":"资产充值引导","s":"资产页","w":"260×260","h":"694×320","a":"694×320","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【WEB】LBank Card首页：1-1","d":"为什么选择LBank Card","s":"LBank Card首页","w":"1182×2100","h":"--","a":"--","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【WEB】LBank Card首页：1-2","d":"为什么选择LBank Card","s":"LBank Card首页","w":"1161×1026","h":"--","a":"--","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【WEB】LBank Card首页：1-3","d":"为什么选择LBank Card","s":"LBank Card首页","w":"1161×1026","h":"--","a":"--","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【WEB】LBank Card首页：2-2","d":"为什么选择LBank Card","s":"LBank Card首页","w":"2370×1026","h":"--","a":"--","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【H5】LBank Card首页：1-1","d":"为什么选择LBank Card","s":"LBank Card首页","w":"--","h":"660×600","a":"--","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"【APP】LBank Card首页：1-1","d":"为什么选择LBank Card","s":"LBank Card首页","w":"--","h":"--","a":"660×600","c":"用户资产","m":"","x":""},{"g":"入口规范","id":"","n":"积分商城奖品图","d":"积分商城奖品图设计规范","s":"积分商城","w":"240×240","h":"--","a":"无","c":"增长","m":"","x":""},{"g":"入口规范","id":"","n":"VIP2.0轮播广告位图","d":"VIP2.0轮播广告位图设计规范","s":"VIP2.0主页","w":"224×224","h":"--","a":"--","c":"增长","m":"","x":""},{"g":"入口规范","id":"","n":"VIP2.0主页：3个及以上左1广告图","d":"3个及以上左1广告图设计规范","s":"VIP2.0主页","w":"320×320","h":"--","a":"--","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"WEB - 首页视频广告位","d":"首页视频广告位","s":"首页","w":"3840×1304","h":"750×412","a":"无","c":"首页","m":"","x":""},{"g":"活动主视觉","id":"","n":"WEB - AFA联合100%赠金活动","d":"S级活动主视觉","s":"交易场景-S级活动","w":"3840×1304","h":"自动缩放裁切","a":"无","c":"增长","m":"图片为黑色背景","x":"源表补充 Web 标注为 3840×1412，请上线前核对"},{"g":"活动主视觉","id":"","n":"WEB - 合约交易锦标赛（个人赛）","d":"合约活动主视觉","s":"交易场景-合约活动","w":"3840×1304","h":"自动缩放裁切","a":"无","c":"增长","m":"图片为黑色背景","x":""},{"g":"活动主视觉","id":"","n":"WEB - 合约交易争霸赛（团赛）","d":"合约活动主视觉","s":"交易场景-合约活动","w":"3840×1368","h":"自动缩放裁切","a":"无","c":"增长","m":"图片为黑色背景","x":"源表补充 Web 标注为 3840×1304，请上线前核对"},{"g":"活动主视觉","id":"","n":"WEB - 世界杯活动","d":"S级活动主视觉","s":"交易场景-S级活动","w":"3840×1412","h":"自动缩放裁切","a":"无","c":"增长","m":"图片为黑色背景","x":""},{"g":"活动主视觉","id":"","n":"WEB - 积分商城","d":"积分兑换活动主视觉","s":"交易场景-积分兑换活动","w":"3840×1400","h":"自动缩放裁切","a":"无","c":"增长","m":"图片为黑色背景","x":""},{"g":"活动主视觉","id":"","n":"【抽奖】3.0居中布局","d":"抽奖活动头图","s":"交易场景-抽奖活动","w":"3840×1200","h":"1125×1251","a":"无","c":"增长","m":"图片为黑色背景","x":""},{"g":"活动主视觉","id":"","n":"【抽奖】3.0底部居中布局","d":"抽奖活动头图","s":"交易场景-抽奖活动","w":"3840×1200","h":"1125×1251","a":"无","c":"增长","m":"图片为黑色背景","x":""},{"g":"活动主视觉","id":"","n":"【抽奖】3.0左右布局","d":"抽奖活动头图","s":"交易场景-抽奖活动","w":"3840×880","h":"1125×1251","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"旧版抽奖组件背景图（转盘）","d":"给开发提供，TW后台不支持配置","s":"交易场景-抽奖活动","w":"2400×1738","h":"","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"旧版抽奖组件背景图（娃娃机）","d":"给开发提供，TW后台不支持配置","s":"交易场景-抽奖活动","w":"2400×1690","h":"","a":"","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"旧版抽奖组件背景图（抽卡）","d":"给开发提供，TW后台不支持配置","s":"交易场景-抽奖活动","w":"2400×1664","h":"","a":"","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"旧版抽奖组件背景图（盲盒）","d":"给开发提供，TW后台不支持配置","s":"交易场景-抽奖活动","w":"2400×1760","h":"","a":"","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"WEB - 普通活动头图","d":"常规活动头图","s":"交易场景-常规活动","w":"3840×1080","h":"1125×1251","a":"无","c":"增长","m":"图片为黑色背景","x":"源表补充 H5 标注为 3840×1080，请上线前核对"},{"g":"活动主视觉","id":"ADS000045","n":"合约狂欢派对头图","d":"合约狂欢派对头图","s":"交易场景-合约活动","w":"3840×988","h":"1125×852","a":"无","c":"增长","m":"图片为黑色背景","x":"源表补充 H5 标注为 3840×988，请上线前核对"},{"g":"活动主视觉","id":"ADS000157","n":"新首页首屏banner未登录-黑","d":"视频 5M 内，建议 2 倍","s":"新版App首页","w":"无","h":"无","a":"视频 750×976 / 静态 1125×1464","c":"首页","m":"","x":""},{"g":"活动主视觉","id":"ADS000159","n":"新首页活动banner","d":"新首页活动banner","s":"新版App首页","w":"无","h":"无","a":"228×228","c":"首页","m":"只导出图片，多语言文字由开发写","x":""},{"g":"活动主视觉","id":"ADS000160","n":"新首页品宣banner","d":"新首页品宣banner","s":"新版App首页","w":"无","h":"无","a":"228×228","c":"首页","m":"带背景的图","x":"源表补充标注为 933×540，请上线前核对"},{"g":"活动主视觉","id":"ADS000162","n":"新首页首屏皮肤已登录","d":"已登录首屏皮肤","s":"新版App首页","w":"无","h":"无","a":"750×624","c":"首页","m":"","x":"源表补充标注为 1125×936，请上线前核对"},{"g":"活动主视觉","id":"","n":"红包运营活动","d":"红包运营活动","s":"交易场景-红包运营活动","w":"3840×1140","h":"1125×1710","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"代币包赔活动","d":"代币包赔活动","s":"交易场景-代币包赔活动","w":"3840×1084","h":"缩放裁切","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"邀请返佣-邀请好友得奖励活动","d":"邀请好友得奖励活动","s":"邀请返佣","w":"3840×1200","h":"1125×1560","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"Yeti活动","d":"Yeti活动头图","s":"活动头图","w":"3840×1300","h":"1125×675","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"Yeti活动1080高度","d":"Yeti活动1080高度头图","s":"活动头图","w":"3740×1080","h":"1125×675","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"企鹅活动","d":"企鹅活动头图","s":"活动头图","w":"3840×1304","h":"1125×618","a":"无","c":"增长","m":"","x":""},{"g":"活动主视觉","id":"","n":"VIP主页视频","d":"VIP2.0主页视频头图","s":"VIP2.0主页头部","w":"3840×1160","h":"750×300","a":"750×300","c":"增长","m":"","x":""}]
   </script>
-
-
-</body></html>
+</body>
+</html>
